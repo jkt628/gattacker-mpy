@@ -4,6 +4,7 @@ PYTHON:=.venv/bin/python
 install: \
   install-boot \
   install-libs \
+  install-objs \
   install-main
 
 .PHONY: install-venv
@@ -14,6 +15,21 @@ ${PYTHON}:
 .PHONY: install-libs
 install-libs: pyproject.toml install-venv
 	uv pip install -r $<
+	mkdir -p ${MD_LIB}
+
+MD_SRC := .venv/lib/python*/site-packages/microdot
+MD_LIB := lib/microdot
+OBJS := \
+  ${MD_LIB}/__init__.mpy \
+  ${MD_LIB}/helpers.mpy \
+  ${MD_LIB}/microdot.mpy \
+  ${MD_LIB}/websocket.mpy
+${MD_LIB}/%.mpy: ${MD_SRC}/%.py
+	mpy-cross -o $@ $<
+
+.PHONY: install-objs
+install-objs: install-libs ${OBJS}
+	mpremote fs cp -r lib :lib
 
 .PHONY: install-main
 install-main: /flash/main.py
