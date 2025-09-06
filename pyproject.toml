@@ -1,0 +1,18 @@
+[project]
+name = "gattacker_mpy"
+version = "0.0.1"
+description = "gattacker for micropython"
+authors = [
+    {name = "Jack Thomasson", email = "4302889+jkt628@users.noreply.github.com"},
+]
+dependencies = [
+    "microdot>=2.3.3",
+]
+readme = "README.md"
+license = "GPL-3.0-or-later"
+
+[tool.ruff]
+line-length = 120
+
+[tool.pyright]
+reportMissingModuleSource = false # using MicroPython stubs, see README.md

@@ -1,0 +1,17 @@
+version: "0.2"
+words:
+  - direnv
+  - dpkg
+  - envsubst
+  - gattacker
+  - isconnected
+  - microcontroller
+  - microcontrollers
+  - micropython
+  - mpremote
+  - pyenv
+  - pyproject
+  - pyright
+  - Thomasson
+  - venv
+  - WLAN
