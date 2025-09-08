@@ -5,9 +5,17 @@
 
 ## One Time Setup
 
+this version for [MicroPython] is used later in this doc.
+
+```bash
+MICROPYTHON_VERSION=1.26.0
+```
+
 several libraries and tools are required to build on your host and run on your microcontroller.
 of course, you must [install MicroPython](https://micropython.org/download/) for your microcontroller(s).
 
+* aioble - asyncio library for Bluetooth Low Energy
+* esptool - burn firmware to ESP32 devices
 * mpremote - interact with [MicroPython] device
 * mpy-cross - precompile for faster loading
 * uv - work around long outstanding [limitations in pip](https://github.com/pypa/pip/issues/11440)
@@ -15,8 +23,7 @@ of course, you must [install MicroPython](https://micropython.org/download/) for
 this is how i installed, [YMMV](https://dictionary.cambridge.org/us/dictionary/english/ymmv).
 
 ```bash
-brew install make mpremote mpy-cross python uv
-mpremote fs rm :main.py
+brew install esptool make mpremote mpy-cross python uv
 ```
 
 ## IDE Support
@@ -26,6 +33,20 @@ my microcontrollers are all based on esp32 but stubs for other configurations ar
 
 ```bash
 pip install -U micropython-esp32-stubs --no-user --target ./typings
+wget -O- https://github.com/micropython/micropython-lib/archive/refs/tags/v${MICROPYTHON_VERSION}.tar.gz | \
+tar xzf - -C typings \
+--transform=s:micropython-lib-${MICROPYTHON_VERSION}/micropython/bluetooth/aioble/:: \
+micropython-lib-${MICROPYTHON_VERSION}/micropython/bluetooth/aioble/aioble
+```
+
+## Prepare microcontroller
+
+i have an [M5Stack Atom Matrix](https://docs.m5stack.com/en/core/ATOM%20Matrix), adjust to your microcontroller.
+
+```bash
+esptool erase-flash
+esptool write-flash 0x1000 M5STACK_ATOM-*-v${MICROPYTHON_VERSION}.bin
+mpremote mip install aioble-central
 ```
 
 ## INSTALL

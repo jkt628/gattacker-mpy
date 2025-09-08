@@ -1,8 +1,11 @@
 version: "0.2"
 words:
+  - aioble
+  - asyncio
   - direnv
   - dpkg
   - envsubst
+  - esptool
   - gattacker
   - isconnected
   - microcontroller
@@ -12,6 +15,9 @@ words:
   - pyenv
   - pyproject
   - pyright
+  - rssi
   - Thomasson
+  - uasyncio
   - venv
   - WLAN
+  - xdigit

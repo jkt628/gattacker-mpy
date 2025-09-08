@@ -29,7 +29,7 @@ ${MD_LIB}/%.mpy: ${MD_SRC}/%.py
 
 .PHONY: install-objs
 install-objs: install-libs ${OBJS}
-	mpremote fs cp -r lib :lib
+	mpremote fs cp -r lib :
 
 .PHONY: install-main
 install-main: /flash/main.py
