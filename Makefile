@@ -1,4 +1,6 @@
 PYTHON:=.venv/bin/python
+MICROCONTROLLER:=M5STACK_ATOM
+MICROPYTHON_VERSION:=1.26.0
 
 .PHONY: install
 install: \
@@ -43,6 +45,12 @@ install-boot: /flash/boot.py
 	mpremote fs cp $< :$<
 %.mpy: %.py
 	envsubst <$< | mpy-cross -o $@ -
+
+.PHONY: flash
+flash:
+	esptool erase-flash
+	esptool write-flash 0x1000 ${MICROCONTROLLER}-*-v${MICROPYTHON_VERSION}.bin
+	mpremote mip install aioble-central github:josverl/micropython-stubs/mip/typing_mpy.json
 
 .PHONY: clean
 clean:

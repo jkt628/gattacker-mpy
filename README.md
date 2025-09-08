@@ -5,7 +5,8 @@
 
 ## One Time Setup
 
-this version for [MicroPython] is used later in this doc.
+this version for [MicroPython] is used later in this doc and MUST be synchronized to the [Makefile].
+[Makefile]: ./Makefile
 
 ```bash
 MICROPYTHON_VERSION=1.26.0
@@ -41,17 +42,16 @@ micropython-lib-${MICROPYTHON_VERSION}/micropython/bluetooth/aioble/aioble
 
 ## Prepare microcontroller
 
-i have an [M5Stack Atom Matrix](https://docs.m5stack.com/en/core/ATOM%20Matrix), adjust to your microcontroller.
+i have an [M5Stack Atom Matrix](https://docs.m5stack.com/en/core/ATOM%20Matrix), adjust the [Makefile] or set `MICROCONTROLLER` appropriately.
 
 ```bash
-esptool erase-flash
-esptool write-flash 0x1000 M5STACK_ATOM-*-v${MICROPYTHON_VERSION}.bin
-mpremote mip install aioble-central
+make flash
+# make flash MICROCONTROLLER=ESP32_GENERIC
 ```
 
 ## INSTALL
 
-the [Makefile](./Makefile) handles building and pushing the application to the microcontroller.
+the [Makefile] handles building and pushing the application to the microcontroller.
 `/flash` acts as a pseudo path to the microcontroller filesystem, so `boot.py` is local and `/flash/boot.py` is remote.
 
 ```bash
