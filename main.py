@@ -100,6 +100,7 @@ def web_server():
                             peripherals[peripheralId] = peripheral
                         peripheral.set_name(result.name())
                         serviceUuids = [PrettyUUID(x) for x in result.services()]
+                        # this test really should not be necessary but without it, securing/gattacker scan crashes.
                         if not serviceUuids:
                             continue
                         manufacturer = b""
@@ -128,10 +129,19 @@ def web_server():
                         "type": "stopScanning",
                     },
                 )
+                return # close websocket
             elif action == "stopScanning":
                 cancel = True
+            else:
+                await send(
+                    ws,
+                    {
+                        "type": "error",
+                        "message": action + ": not implemented",
+                    },
+                )
 
-    app.run(port=0xb1e, debug=True)
+    app.run(port=0xB1E, debug=True)
 
 
 if __name__ == "__main__":
