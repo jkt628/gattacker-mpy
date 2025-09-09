@@ -9,7 +9,6 @@ from microdot.websocket import with_websocket
 from micropython import const
 
 _ADV_TYPE_MANUFACTURER = const(0xFF)
-hexVal = re.compile("0x([0-9A-Fa-f]+)")
 onlyHexName = re.compile(
     "^[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]$"
 )
@@ -38,11 +37,7 @@ peripherals: Dict[str, Peripheral] = {}
 
 
 def PrettyUUID(uuid):
-    value = str(uuid)
-    match = hexVal.search(value)
-    if match:
-        return int(match.group(1), 16)
-    return value.replace("UUID('", "").replace("')", "")
+    return str(uuid).replace("UUID('", "", 1).replace("0x", "", 1).replace("')", "", 1)
 
 
 async def send(ws, data):
@@ -100,9 +95,6 @@ def web_server():
                             peripherals[peripheralId] = peripheral
                         peripheral.set_name(result.name())
                         serviceUuids = [PrettyUUID(x) for x in result.services()]
-                        # this test really should not be necessary but without it, securing/gattacker scan crashes.
-                        if not serviceUuids:
-                            continue
                         manufacturer = b""
                         for x in result._decode_field(_ADV_TYPE_MANUFACTURER):
                             manufacturer += x.hex()
