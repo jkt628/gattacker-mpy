@@ -59,7 +59,7 @@ lib/debug/__init__.mpy: debug/__init__.py
 flash:
 	esptool erase-flash
 	esptool write-flash 0x1000 ${MICROCONTROLLER}-*-v${MICROPYTHON_VERSION}.bin
-	mpremote mip install aioble-central github:josverl/micropython-stubs/mip/typing_mpy.json
+	mpremote mip install aioble-central aioble-client github:josverl/micropython-stubs/mip/typing_mpy.json
 
 .PHONY: clean
 clean:
