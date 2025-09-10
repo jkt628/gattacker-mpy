@@ -39,6 +39,15 @@ install-main: /flash/main.py
 .PHONY: install-boot
 install-boot: /flash/boot.py
 
+# install-debug is not implied by install, must be run explicitly
+.PHONY: install-debug
+install-debug: lib/debug lib/debug/__init__.mpy
+lib/debug:
+	mkdir -p $@
+lib/debug/__init__.mpy: debug/__init__.py
+	mpy-cross -o $@ $<
+	${MAKE} install-objs
+
 /flash/%.py: %.py
 	envsubst <$< | mpremote fs cp /dev/stdin :$<
 /flash/%.mpy: %.mpy

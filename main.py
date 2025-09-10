@@ -8,10 +8,20 @@ from microdot import Microdot
 from microdot.websocket import with_websocket
 from micropython import const
 
+try:
+    from debug import DEBUG
+except ImportError:
+    DEBUG = False
+
 _ADV_TYPE_MANUFACTURER = const(0xFF)
 onlyHexName = re.compile(
     "^[0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]$"
 )
+
+
+def debug(*args, **kwargs):
+    if DEBUG:
+        print(*args, **kwargs)
 
 
 class Peripheral(ScanResult):
@@ -42,11 +52,12 @@ def PrettyUUID(uuid):
 
 async def send(ws, data):
     payload = json.dumps(data)
-    print(payload)
+    debug(payload)
     await ws.send(payload)
 
 
 def web_server():
+    print("DEBUG =", DEBUG)
     app = Microdot()
 
     @app.route("/")
@@ -64,7 +75,7 @@ def web_server():
         while True:
             raw = await ws.receive()
             data = json.loads(raw)
-            print(data)
+            debug(data)
 
             action = data["action"]
             if action == "startScanning":
@@ -121,7 +132,7 @@ def web_server():
                         "type": "stopScanning",
                     },
                 )
-                return # close websocket
+                return  # close websocket
             elif action == "stopScanning":
                 cancel = True
             else:
